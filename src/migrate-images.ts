@@ -23,5 +23,3 @@ while (iterator < 10) {
 
   iterator++;
 }
-
-// https://i.imgur.com/fHS3GOv.jpg
