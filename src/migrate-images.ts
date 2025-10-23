@@ -10,6 +10,16 @@ const data = parse(await file.text(), { header: true }) as {
   cdn_url: string
   }[];
 
-data.forEach(({ imgur_url, cdn_url }) => {
+data.forEach(async ({ imgur_url, cdn_url }) => {
   console.log(imgur_url, cdn_url)
+  const response = await fetch(imgur_url);
+  if (!response.ok) {
+    console.error(`Failed to fetch image from ${imgur_url}: ${response.status} ${response.statusText}`);
+    throw new Error(`Failed to fetch image from ${imgur_url}`);
+  };
+  const contentLength = response.headers.get('Content-Length');
+  console.log(`Fetched image from ${imgur_url} (content length: ${contentLength})`);
+  if (contentLength === '34641') {
+    throw new Error(`Image probably blocked ${imgur_url}`);
+  }
 });
