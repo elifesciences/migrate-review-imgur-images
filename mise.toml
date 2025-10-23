@@ -6,3 +6,6 @@ run = "./script/gather_reviews.sh"
 
 [tasks.migrate-images]
 run = "bun src/migrate-images.ts"
+
+[tasks.update-hypothesis-content]
+run = "bun src/update-hypothesis-content.ts"
