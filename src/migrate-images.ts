@@ -1,26 +1,15 @@
-import { chunks } from './array-utils';
-import { extractImgurSources } from './html-utils';
+import parse from "csv-simple-parser";
 
-import reviews from '../data/reviews.json';
+const file = Bun.file('data/imgur-image-urls-with-manuscript-id-and-cdn-url.csv');
 
-const reviewsChunks = chunks<{doi: string, reviewContentUrl: string}>(reviews, 2);
-let iterator = 0;
-while (iterator < 10) {
-  const reviewsChunk = reviewsChunks.next().value;
+const data = parse(await file.text(), { header: true }) as {
+  manuscript_id: string,
+  elife_doi_version_str: string,
+  hypothesis_id: string,
+  imgur_url: string,
+  cdn_url: string
+  }[];
 
-  const reviewsChunkWithContent = await Promise.all(reviewsChunk.map(async (review) => ({
-    ...review,
-    content: await (await fetch(review.reviewContentUrl)).text(),
-  })));
-  const reviewsWithImgur = reviewsChunkWithContent.filter((review) => review.content.includes('imgur'));
-
-  const doisWithImgurLinks = reviewsWithImgur.map((review) => ({
-    doi: review.doi,
-    imgLink: extractImgurSources(review.content),
-  }));
-  if (doisWithImgurLinks.length > 0) {
-    console.log(doisWithImgurLinks);
-  }
-
-  iterator++;
-}
+data.forEach(({ imgur_url, cdn_url }) => {
+  console.log(imgur_url, cdn_url)
+});
