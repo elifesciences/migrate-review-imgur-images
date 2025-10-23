@@ -1,4 +1,5 @@
 import reviews from '../data/reviews.json';
+import { extractImgurSources } from './html-utils';
 
 function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
   for (let i = 0; i < arr.length; i += n) {
@@ -7,28 +8,6 @@ function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
 }
 
 
-const extractImgurLinks = (html: string): string[] => {
-  const arrayOfImgurLinks: string[] = [];
-  const rewriter = new HTMLRewriter().on('img', {
-    element(img) {
-      const src = img.getAttribute('src');
-      if (src) {
-        arrayOfImgurLinks.push(src);
-      }
-    },
-  }).on('a', {
-    element(a) {
-      const src = a.getAttribute('href');
-      if (src && src.includes('imgur')) {
-        arrayOfImgurLinks.push(src);
-      }
-    }
-  });
-
-  const result = rewriter.transform(html);
-  // console.log('result', result);
-  return arrayOfImgurLinks;
-};
 
 const reviewsChunks = chunks(reviews, 2);
 let iterator = 0;
@@ -44,7 +23,7 @@ while (iterator < 10) {
 
   const doisWithImgurLinks = reviewsWithImgur.map((review) => ({
     doi: review.doi,
-    imgLink: extractImgurLinks(review.content),
+    imgLink: extractImgurSources(review.content),
   }));
   console.log(doisWithImgurLinks);
 
