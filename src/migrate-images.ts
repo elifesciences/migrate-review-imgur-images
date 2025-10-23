@@ -3,12 +3,11 @@ import { extractImgurSources } from './html-utils';
 
 import reviews from '../data/reviews.json';
 
-const reviewsChunks = chunks(reviews, 2);
+const reviewsChunks = chunks<{doi: string, reviewContentUrl: string}>(reviews, 2);
 let iterator = 0;
 while (iterator < 10) {
   const reviewsChunk = reviewsChunks.next().value;
 
-  console.log('chunk');
   const reviewsChunkWithContent = await Promise.all(reviewsChunk.map(async (review) => ({
     ...review,
     content: await (await fetch(review.reviewContentUrl)).text(),
@@ -19,7 +18,9 @@ while (iterator < 10) {
     doi: review.doi,
     imgLink: extractImgurSources(review.content),
   }));
-  console.log(doisWithImgurLinks);
+  if (doisWithImgurLinks.length > 0) {
+    console.log(doisWithImgurLinks);
+  }
 
   iterator++;
 }
