@@ -1,0 +1,8 @@
+[tools]
+bun = "latest"
+
+[tasks.gather-reviews]
+run = "./script/gather_reviews.sh"
+
+[tasks.migrate-images]
+run = "bun src/migrate-images.ts"
