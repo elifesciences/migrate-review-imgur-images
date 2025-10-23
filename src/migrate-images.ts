@@ -1,13 +1,7 @@
-import reviews from '../data/reviews.json';
+import { chunks } from './array-utils';
 import { extractImgurSources } from './html-utils';
 
-function* chunks<T>(arr: T[], n: number): Generator<T[], void> {
-  for (let i = 0; i < arr.length; i += n) {
-    yield arr.slice(i, i + n);
-  }
-}
-
-
+import reviews from '../data/reviews.json';
 
 const reviewsChunks = chunks(reviews, 2);
 let iterator = 0;
