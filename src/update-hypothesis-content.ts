@@ -1,7 +1,9 @@
 import data from '../data/imgur-image-urls-with-manuscript-id-and-cdn-url-and-published-url-and-imgur-link-url.json';
 
+let index = 0;
 (async () => {
-  for (const { hypothesis_id, image_info } of data.splice(0, 3)) {
+  for (const { hypothesis_id, image_info } of data) {
+    index++;
     const annotationResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`);
     if (!annotationResponse.ok) {
       throw new Error(`Failed to fetch annotation for hypothesis_id ${hypothesis_id}: ${annotationResponse.status} ${annotationResponse.statusText}`);
@@ -19,10 +21,16 @@ import data from '../data/imgur-image-urls-with-manuscript-id-and-cdn-url-and-pu
     });
 
     if (content == originalContent) {
-      console.log(`No changes needed for hypothesis_id ${hypothesis_id}`);
+      console.log(`No changes needed for hypothesis_id ${hypothesis_id} on ${annotation.uri}`);
       continue;
     }
-    console.log(`Updating hypothesis_id ${hypothesis_id}`);
+
+    if (!(annotation.uri.startsWith('https://www.biorxiv.org/') || annotation.uri.startsWith('https://www.medrxiv.org/'))) {
+      console.log(`Skipping changes needed for hypothesis_id ${hypothesis_id} on ${annotation.uri}`);
+      continue;
+    }
+
+    console.log(`Updating hypothesis_id ${hypothesis_id} on ${annotation.uri}`);
 
     const updateResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`, {
       method: 'PATCH',
@@ -36,6 +44,7 @@ import data from '../data/imgur-image-urls-with-manuscript-id-and-cdn-url-and-pu
     });
 
     if (!updateResponse.ok) {
+      console.error(`Failed to update index ${index} annotation for hypothesis_id ${hypothesis_id}: ${content}`);
       throw new Error(`Failed to update annotation for hypothesis_id ${hypothesis_id}: ${updateResponse.status} ${updateResponse.statusText}`);
     }
 
