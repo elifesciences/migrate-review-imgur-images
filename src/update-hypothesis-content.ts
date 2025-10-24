@@ -7,13 +7,23 @@ data.splice(0, 1).forEach(async ({ hypothesis_id, image_info }) => {
   }
 
   const annotation = await annotationResponse.json();
-  let content = annotation.text;
+
+  const originalContent = annotation.text;
+
+  let content = originalContent;
   content = content.replaceAll(' title="source: imgur.com"', '');
   image_info.forEach(({ imgur_link_url, imgur_url, published_url }) => {
     content = content.replaceAll(imgur_link_url, published_url);
     content = content.replaceAll(imgur_url, published_url);
   });
   console.log(content);
+
+  if (content == originalContent) {
+    console.log(`No changes needed for hypothesis_id ${hypothesis_id}`);
+    return;
+  }
+  console.log(`Updating hypothesis_id ${hypothesis_id}`);
+
   // const updateResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`, {
   //   method: 'PUT',
   //   headers: {
