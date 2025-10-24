@@ -1,6 +1,6 @@
 import data from '../data/imgur-image-urls-with-manuscript-id-and-cdn-url-and-published-url-and-imgur-link-url.json';
 
-data.splice(0, 1).forEach(async ({ hypothesis_id, image_info }) => {
+data.splice(0, 2).forEach(async ({ hypothesis_id, image_info }) => {
   const annotationResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`);
   if (!annotationResponse.ok) {
     throw new Error(`Failed to fetch annotation for hypothesis_id ${hypothesis_id}: ${annotationResponse.status} ${annotationResponse.statusText}`);
@@ -24,19 +24,18 @@ data.splice(0, 1).forEach(async ({ hypothesis_id, image_info }) => {
   }
   console.log(`Updating hypothesis_id ${hypothesis_id}`);
 
-  // const updateResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`, {
-  //   method: 'PUT',
-  //   headers: {
-  //     'Authorization': `Bearer ${process.env.HYPOTHESIS_API_TOKEN}`,
-  //     'Content-Type': 'application/json'
-  //   },
-  //   body: JSON.stringify({
-  //     ...annotation,
-  //     content: contentWithImages
-  //   })
-  // });
+  const updateResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${process.env.HYPOTHESIS_API_TOKEN}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      text: content,
+    })
+  });
 
-  // if (!updateResponse.ok) {
-  //   throw new Error(`Failed to update annotation for hypothesis_id ${hypothesis_id}: ${updateResponse.status} ${updateResponse.statusText}`);
-  // }
+  if (!updateResponse.ok) {
+    throw new Error(`Failed to update annotation for hypothesis_id ${hypothesis_id}: ${updateResponse.status} ${updateResponse.statusText}`);
+  }
 });
