@@ -1,6 +1,15 @@
+import { writeToPath } from '@fast-csv/format'; '@fast-csv/format';
+
 import data from '../data/imgur-image-urls-with-manuscript-id-and-cdn-url-and-published-url-and-imgur-link-url.json';
 
 let index = 0;
+let skippedContent: {
+  hypothesis_id: string,
+  hypothesis_url: string,
+  posted_on: string,
+  current_content: string,
+  new_content: string,
+  }[] = [];
 (async () => {
   for (const { hypothesis_id, image_info } of data) {
     index++;
@@ -9,7 +18,13 @@ let index = 0;
       throw new Error(`Failed to fetch annotation for hypothesis_id ${hypothesis_id}: ${annotationResponse.status} ${annotationResponse.statusText}`);
     }
 
-    const annotation = await annotationResponse.json();
+    const annotation = await annotationResponse.json() as {
+      text: string,
+      links: {
+        html: string,
+      }
+      uri: string,
+      };
 
     const originalContent = annotation.text;
 
@@ -26,6 +41,13 @@ let index = 0;
     }
 
     if (!(annotation.uri.startsWith('https://www.biorxiv.org/') || annotation.uri.startsWith('https://www.medrxiv.org/'))) {
+      skippedContent.push({
+        hypothesis_id: hypothesis_id,
+        hypothesis_url: annotation.links.html,
+        posted_on: annotation.uri,
+        current_content: originalContent,
+        new_content: content,
+      });
       console.log(`Skipping changes needed for hypothesis_id ${hypothesis_id} on ${annotation.uri}`);
       continue;
     }
@@ -50,4 +72,5 @@ let index = 0;
 
     console.log(`Updated hypothesis_id ${hypothesis_id}`);
   }
+  writeToPath('data/skipped_hypothesis_updates.csv', skippedContent, {headers: true});
 })();
