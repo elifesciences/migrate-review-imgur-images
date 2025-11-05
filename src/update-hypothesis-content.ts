@@ -24,6 +24,7 @@ let skippedContent: {
         html: string,
       }
       uri: string,
+      group: string,
       };
 
     const originalContent = annotation.text;
@@ -36,7 +37,7 @@ let skippedContent: {
     });
 
     if (content == originalContent) {
-      console.log(`No changes needed for hypothesis_id ${hypothesis_id} on ${annotation.uri}`);
+      console.log(`No changes needed for hypothesis_id ${hypothesis_id} on ${annotation.uri} (group: ${annotation.group})`);
       continue;
     }
 
@@ -52,7 +53,7 @@ let skippedContent: {
       continue;
     }
 
-    console.log(`Updating hypothesis_id ${hypothesis_id} on ${annotation.uri}`);
+    console.log(`Updating hypothesis_id ${hypothesis_id} on ${annotation.uri} (group: ${annotation.group})`);
 
     const updateResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`, {
       method: 'PATCH',
