@@ -40,7 +40,7 @@ let skippedContent: {
       continue;
     }
 
-    if (!(annotation.uri.startsWith('https://www.biorxiv.org/') || annotation.uri.startsWith('https://www.medrxiv.org/'))) {
+    if (!(annotation.uri.startsWith('https://www.biorxiv.org/') || annotation.uri.startsWith('https://www.medrxiv.org/') || (annotation.group === 'vweBiYd7'))) {
       skippedContent.push({
         hypothesis_id: hypothesis_id,
         hypothesis_url: annotation.links.html,
