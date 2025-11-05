@@ -30,7 +30,7 @@ let updatedContent: {
     const originalContent = annotation.text;
 
     let content = originalContent;
-    content = content.replaceAll(' title="source: imgur.com"', '');
+    content = content.replaceAll(' title="source:\u00A0imgur.com"', '');
     image_info.forEach(({ imgur_link_url, imgur_url, published_url }) => {
       content = content.replaceAll(imgur_link_url, published_url);
       content = content.replaceAll(imgur_url, published_url);
