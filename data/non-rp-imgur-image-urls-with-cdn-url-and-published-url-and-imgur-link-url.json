@@ -432,7 +432,13 @@
   }]
 }, {
   "hypothesis_id": "4eJEnNXwEee-anvHeyu2NQ",
-  "image_info": []
+  "image_info": [{
+    "imgur_url": "https://i.imgur.com/tiHtmGc.png",
+    "imgur_url_in_text": "https://imgur.com/download/tiHtmGc",
+    "imgur_link_url": "https://imgur.com/tiHtmGc",
+    "cdn_url": "s3://elife-cdn/public-review-media/public-reviews/tiHtmGc.png",
+    "published_url": "https://cdn.elifesciences.org/public-review-media/public-reviews/tiHtmGc.png"
+  }]
 }, {
   "hypothesis_id": "4hphtPm1EeuRkOd_KsEdvg",
   "image_info": [{
