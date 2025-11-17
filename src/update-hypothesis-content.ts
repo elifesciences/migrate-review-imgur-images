@@ -1,6 +1,6 @@
 import { writeToPath } from '@fast-csv/format'; '@fast-csv/format';
 
-import data from '../data/imgur-image-urls-with-manuscript-id-and-cdn-url-and-published-url-and-imgur-link-url.json';
+import data from '../data/non-rp-imgur-image-urls-with-cdn-url-and-published-url-and-imgur-link-url.json';
 
 let index = 0;
 let updatedContent: {
@@ -31,9 +31,9 @@ let updatedContent: {
 
     let content = originalContent;
     content = content.replaceAll(' title="source:\u00A0imgur.com"', '');
-    image_info.forEach(({ imgur_link_url, imgur_url, published_url }) => {
+    image_info.forEach(({ imgur_link_url, imgur_url_in_text, published_url }) => {
       content = content.replaceAll(imgur_link_url, published_url);
-      content = content.replaceAll(imgur_url, published_url);
+      content = content.replaceAll(imgur_url_in_text, published_url);
     });
 
     if (content == originalContent) {
