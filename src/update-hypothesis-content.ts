@@ -25,6 +25,7 @@ let updatedContent: {
       }
       uri: string,
       group: string,
+      user: string,
       };
 
     const originalContent = annotation.text;
@@ -41,7 +42,7 @@ let updatedContent: {
       continue;
     }
 
-    console.log(`Updating hypothesis_id ${hypothesis_id} on ${annotation.uri} (group: ${annotation.group})`);
+    console.log(`Updating hypothesis_id ${hypothesis_id} on ${annotation.uri} (group: ${annotation.group}, user: ${annotation.user})`);
 
     const updateResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`, {
       method: 'PATCH',
@@ -55,8 +56,10 @@ let updatedContent: {
     });
 
     if (!updateResponse.ok) {
-      console.error(`Failed to update index ${index} annotation for hypothesis_id ${hypothesis_id}: ${content}`);
-      throw new Error(`Failed to update annotation for hypothesis_id ${hypothesis_id}: ${updateResponse.status} ${updateResponse.statusText}`);
+      const responseText = await updateResponse.text();
+      console.error(`Failed to update index ${index} annotation for hypothesis_id ${hypothesis_id} (${updateResponse.status} ${updateResponse.statusText}):\n\`\`\`text\n${responseText}\n\`\`\``);
+      continue;
+    //   throw new Error(`Failed to update annotation for hypothesis_id ${hypothesis_id}: ${updateResponse.status} ${updateResponse.statusText}`);
     }
 
     updatedContent.push({
