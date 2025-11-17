@@ -32,6 +32,9 @@ let updatedContent: {
 
     let content = originalContent;
     content = content.replaceAll(' title="source:\u00A0imgur.com"', '');
+    content = content.replaceAll(' title="source: imgur.com"', '');
+    content = content.replaceAll(' title= "source:imgur.com"', '');
+    content = content.replaceAll(' title= \u201csource:imgur.com\u201d', '');
     image_info.forEach(({ imgur_link_url, imgur_url_in_text, published_url }) => {
       content = content.replaceAll(imgur_link_url, published_url);
       content = content.replaceAll(imgur_url_in_text, published_url);
