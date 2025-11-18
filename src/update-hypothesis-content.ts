@@ -11,9 +11,9 @@ let updatedContent: {
   new_content: string,
   }[] = [];
 const selectedHypothesisIds = new Set([
-  '2hfnEmeTEeqmO-NnIleg_w',
-  'LaP8mGUqEeqUUicFWjoJcg',
-  'UhdP4AoQEeuH4Ge43uCWag',
+//   '2hfnEmeTEeqmO-NnIleg_w',
+//   'LaP8mGUqEeqUUicFWjoJcg',
+//   'UhdP4AoQEeuH4Ge43uCWag',
   'pmrgVg-sEeurxEOosapBrg',
 ]);
 (async () => {
@@ -46,9 +46,11 @@ const selectedHypothesisIds = new Set([
     content = content.replaceAll(' title= "source:imgur.com"', '');
     content = content.replaceAll(' title= "source: imgur.com"', '');
     content = content.replaceAll(' title= \u201csource:imgur.com\u201d', '');
+    content = content.replaceAll('![Imgur](', '![](');
     image_info.forEach(({ imgur_link_url, imgur_url_in_text, published_url }) => {
       content = content.replaceAll(imgur_link_url, published_url);
       content = content.replaceAll(imgur_url_in_text, published_url);
+      content = content.replaceAll(published_url + '.png', published_url);
     });
 
     if (content == originalContent) {
