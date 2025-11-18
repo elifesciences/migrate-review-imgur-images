@@ -10,9 +10,19 @@ let updatedContent: {
   current_content: string,
   new_content: string,
   }[] = [];
+const selectedHypothesisIds = new Set([
+  '2hfnEmeTEeqmO-NnIleg_w',
+  'LaP8mGUqEeqUUicFWjoJcg',
+  'UhdP4AoQEeuH4Ge43uCWag',
+  'pmrgVg-sEeurxEOosapBrg',
+]);
 (async () => {
   for (const { hypothesis_id, image_info } of data) {
     index++;
+    if (!selectedHypothesisIds.has(hypothesis_id)) {
+      console.log(`Skipping other hypothesis_id ${hypothesis_id}`);
+      continue;
+    }
     const annotationResponse = await fetch(`https://api.hypothes.is/api/annotations/${hypothesis_id}`);
     if (!annotationResponse.ok) {
       throw new Error(`Failed to fetch annotation for hypothesis_id ${hypothesis_id}: ${annotationResponse.status} ${annotationResponse.statusText}`);
