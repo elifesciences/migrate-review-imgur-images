@@ -4,7 +4,11 @@ import data from '../data/non-rp-imgur-image-urls-with-cdn-url-and-published-url
 
 // Initialize the S3 client using Bun's built-in support
 // Bun will read credentials from environment variables automatically: AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION
-for (const { image_info } of data) {
+for (const { hypothesis_id, image_info } of data) {
+  if (hypothesis_id !== 'najcTLDQEe-o0ye-xAYWWw') {
+    console.log(`Skipping other hypothesis_id ${hypothesis_id}`);
+    continue;
+  }
   for (const { imgur_url, cdn_url } of image_info) {
     console.log(`copying ${imgur_url} to ${cdn_url}...`);
 
@@ -25,12 +29,15 @@ for (const { image_info } of data) {
     }
 
     const blob = await response.blob();
+    const bytes = new Uint8Array(await blob.arrayBuffer());
+    console.log(`Bytes: ${bytes.length}`);
+    if (bytes.length === 34641) {
+        console.warn(`Image probably blocked ${imgur_url}`);
+        continue;
+    }
 
     const s3File = s3.file(cdn_url);
-
     console.log(`Uploading to S3 at:`, s3File);
-
-    const bytes = new Uint8Array(await blob.arrayBuffer());
     await s3File.write(bytes, {
         type: response.headers.get('Content-Type') ?? 'application/octet-stream'
     });
