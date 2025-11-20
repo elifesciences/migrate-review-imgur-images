@@ -14,8 +14,24 @@ const selectedHypothesisIds = new Set([
 //   '2hfnEmeTEeqmO-NnIleg_w',
 //   'LaP8mGUqEeqUUicFWjoJcg',
 //   'UhdP4AoQEeuH4Ge43uCWag',
-  'pmrgVg-sEeurxEOosapBrg',
+//   'pmrgVg-sEeurxEOosapBrg',
+  '5MvgXhhqEeudArOQfCiu9g',
+  '6rPAHqJ_EeuOuSsHFnvlZA',
+  '85mlhn0JEeuK40_Io_wFqg',
+  '8s-P0BnWEeu6xXssexgqJw',
+  'Ac8nCOCmEeq9iW8-HH-zZw',
+  'DVhNNCsuEeuMRpuxZL1oug',
+  'Jtz8cjMiEeu6OMNM5jbtnw',
+  'N4EJIrHhEeuzwmdPkRRhkg',
+  'RU33kveLEeqRfkexzDf8Jg',
+  'WUSnwKBiEeuvAw_b2mTt_Q',
+  'apzzNB0IEeurCB_njCeppA',
+  'cxtp5M6KEeu4UWcjKUwoDw',
+  'jtaSFq5qEeuhKEtA2DfahQ',
+  'mQbj0LHaEeuQPns2f13g3Q',
+    // 'najcTLDQEe-o0ye-xAYWWw',
 ]);
+
 (async () => {
   for (const { hypothesis_id, image_info } of data) {
     index++;
@@ -74,6 +90,7 @@ const selectedHypothesisIds = new Set([
     if (!updateResponse.ok) {
       const responseText = await updateResponse.text();
       console.error(`Failed to update index ${index} annotation for hypothesis_id ${hypothesis_id} (${updateResponse.status} ${updateResponse.statusText}):\n\`\`\`text\n${responseText}\n\`\`\``);
+      console.info(`\`\`\`markdown\n${content}\n\`\`\``)
       continue;
     //   throw new Error(`Failed to update annotation for hypothesis_id ${hypothesis_id}: ${updateResponse.status} ${updateResponse.statusText}`);
     }
